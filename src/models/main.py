@@ -32,22 +32,30 @@ def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, s
         team_to_idx[team] = i
         idx_to_team[i] = team
     return team_to_idx, idx_to_team
+    
 
-
-def add_winner(match_data: list) -> None:
+def network(match_data: list, idx_to_team: dict, team_to_idx: dict):
+    team_edges = []
     for one_match in match_data:
-        if one_match.get("score1") > one_match.get("score2"):
-            one_match["winner"] = one_match.get("team1")
+        team1_name = one_match.get("team1")
+        team2_name = one_match.get("team2")
+        team1_id = team_to_idx.get(team1_name)
+        team2_id = team_to_idx.get(team2_name)
+
+        if one_match.get("score1") > one_match.get("score2"):            
+            team_edges.append((team1_id, team2_id))
         else:
-            one_match["winner"] = one_match.get("team2")
-            
+            team_edges.append((team2_id, team1_id))
 
-def network(match_data: list, idx_to_team: dict):
-    for one_match in match_data:
-        one_match.get("winner")
+    print(team_edges)
 
 
-    G = nx.DiGrapsh()
+    team_node = []
+    # for team_id in len(idx_to_team):
+    #     team_node.append(team_id)
+    
+    # G = nx.DiGrapsh()
+    # G.add_node_from(team_node)
 
 
 
@@ -89,11 +97,11 @@ def debug_make_team_to_idx():
     # print(team_to_idx)
     print(idx_to_team)
 
-def debug_win_func():
+def debug_network():
     match_data = load_json_line(SAVE_MATCH_DATA)
-    add_winner(match_data)
-    print(match_data[:2])
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    network(match_data, idx_to_team, team_to_idx)
 
 
 if __name__ == "__main__":
-    debug_win_func()
+    debug_network()
