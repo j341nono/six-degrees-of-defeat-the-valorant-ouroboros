@@ -49,10 +49,8 @@ def build_match_edges(match_data: list, team_to_idx: dict) -> list[tuple[int, in
     return team_edges
 
 
-def network(
-        match_data: list, 
+def build_network(
         idx_to_team: dict, 
-        team_to_idx: dict, 
         team_edges: list[tuple[int, int]]
     ) -> None:
 
@@ -66,17 +64,25 @@ def network(
     return DG
 
 
+def find_shortest_path(DG: nx.DiGraph, win_team: str, loss_team: str):
+    try:
+        return nx.shortest_path(DG, source=win_team, target=loss_team)
+    except nx.exception.NetworkXNoPath:
+        print(f"No path between {win_team} to {loss_team}")
+        import sys
+        sys.exit()
+
+
 def main():
     args = parse_args()
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
     team_edges = build_match_edges(match_data, team_to_idx)
-    network(
-        match_data, 
-        idx_to_team,
-        team_to_idx,
-        team_edges)
+    DG = build_network(idx_to_team, team_edges)
     
+
+
+
 
 def debug_load_json():
     match_data = load_json_line(SAVE_MATCH_DATA)
@@ -117,18 +123,34 @@ def debug_build_graph():
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
     team_edges = build_match_edges(match_data, team_to_idx)
-    DG = network(
-        match_data, 
-        idx_to_team,
-        team_to_idx,
-        team_edges)
+    DG = build_network(idx_to_team, team_edges)
     
     print(f"list(DG.nodes): {list(DG.nodes)}")
     print(f"list(DG.edges): {list(DG.edges)}")
     print(f"list(DG.ad): {list(DG.adj[1])}")
     print(f"DG.degree[1]: {DG.degree[1]}")
 
+def debug_find_shortest_path():
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    team_edges = build_match_edges(match_data, team_to_idx)
+    DG = build_network(idx_to_team, team_edges)
+
+    win_team_id = 135
+    loss_team_id = 111
+    print(f"win_team: {idx_to_team.get(win_team_id)}")
+    print(f"loss_team: {idx_to_team.get(loss_team_id)}")
+    path = find_shortest_path(DG, win_team_id, loss_team_id)
+    print(path)
+
+
+def debug_search_team():
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    print(team_to_idx.get("G2 Esports")) # 135
+    print(team_to_idx.get("FNATIC")) # 111
 
 
 if __name__ == "__main__":
-    debug_build_graph()
+    debug_find_shortest_path()
+    # debug_search_team()
