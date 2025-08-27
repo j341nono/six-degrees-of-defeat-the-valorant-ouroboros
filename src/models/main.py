@@ -49,40 +49,34 @@ def build_match_edges(match_data: list, team_to_idx: dict) -> list[tuple[int, in
     return team_edges
 
 
-def network(match_data: list, idx_to_team: dict, team_to_idx: dict):
-    team_edges = []
-    for one_match in match_data:
-        team1_name = one_match.get("team1")
-        team2_name = one_match.get("team2")
-        team1_id = team_to_idx.get(team1_name)
-        team2_id = team_to_idx.get(team2_name)
-
-        if one_match.get("score1") > one_match.get("score2"):            
-            team_edges.append((team1_id, team2_id))
-        else:
-            team_edges.append((team2_id, team1_id))
-
-    print(team_edges)
-
+def network(
+        match_data: list, 
+        idx_to_team: dict, 
+        team_to_idx: dict, 
+        team_edges: list[tuple[int, int]]
+    ) -> None:
 
     team_node = []
-    # for team_id in len(idx_to_team):
-    #     team_node.append(team_id)
+    for team_id in range(len(idx_to_team)):
+        team_node.append(team_id)
     
-    # G = nx.DiGrapsh()
-    # G.add_node_from(team_node)
-
-
+    DG = nx.DiGraph()
+    DG.add_nodes_from(team_node)
+    DG.add_edges_from(team_edges)
+    return DG
 
 
 def main():
     args = parse_args()
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    team_edges = build_match_edges(match_data, team_to_idx)
+    network(
+        match_data, 
+        idx_to_team,
+        team_to_idx,
+        team_edges)
     
-    print(len(team_to_idx))
-
-
 
 def debug_load_json():
     match_data = load_json_line(SAVE_MATCH_DATA)
@@ -119,6 +113,22 @@ def debug_build_match_edges():
     team_edges = build_match_edges(match_data, team_to_idx)
     print(team_edges)
 
+def debug_build_graph():
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    team_edges = build_match_edges(match_data, team_to_idx)
+    DG = network(
+        match_data, 
+        idx_to_team,
+        team_to_idx,
+        team_edges)
+    
+    print(f"list(DG.nodes): {list(DG.nodes)}")
+    print(f"list(DG.edges): {list(DG.edges)}")
+    print(f"list(DG.ad): {list(DG.adj[1])}")
+    print(f"DG.degree[1]: {DG.degree[1]}")
+
+
 
 if __name__ == "__main__":
-    debug_build_match_edges()
+    debug_build_graph()
