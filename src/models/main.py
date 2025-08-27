@@ -34,6 +34,21 @@ def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, s
     return team_to_idx, idx_to_team
     
 
+def build_match_edges(match_data: list, team_to_idx: dict) -> list[tuple[int, int]]:
+    team_edges = []
+    for one_match in match_data:
+        team1_name = one_match.get("team1")
+        team2_name = one_match.get("team2")
+        team1_id = team_to_idx.get(team1_name)
+        team2_id = team_to_idx.get(team2_name)
+
+        if one_match.get("score1") > one_match.get("score2"):            
+            team_edges.append((team1_id, team2_id))
+        else:
+            team_edges.append((team2_id, team1_id))
+    return team_edges
+
+
 def network(match_data: list, idx_to_team: dict, team_to_idx: dict):
     team_edges = []
     for one_match in match_data:
@@ -64,6 +79,7 @@ def main():
     args = parse_args()
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    
     print(len(team_to_idx))
 
 
@@ -97,11 +113,12 @@ def debug_make_team_to_idx():
     # print(team_to_idx)
     print(idx_to_team)
 
-def debug_network():
+def debug_build_match_edges():
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
-    network(match_data, idx_to_team, team_to_idx)
+    team_edges = build_match_edges(match_data, team_to_idx)
+    print(team_edges)
 
 
 if __name__ == "__main__":
-    debug_network()
+    debug_build_match_edges()
