@@ -1,52 +1,12 @@
-import argparse
-import json
 import networkx as nx
+from src.models.utils import (
+    parse_args,
+    load_json_line,
+    make_team_to_idx_dict,
+    build_match_edges
+) 
 
 SAVE_MATCH_DATA="data/processed/match_data.jsonl"
-
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--max", action="store_true")
-    parser.add_argument("--min", action="store_true")
-    return parser.parse_args()
-
-
-def load_json_line(path: str) -> list:
-    match_list = []
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            match_list.append(json.loads(line))
-    return match_list
-            
-
-def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, str]]:
-    all_team = set()
-    for one_match in match_data:
-        all_team.add(one_match.get("team1"))
-        all_team.add(one_match.get("team2"))
-
-    team_to_idx = {}
-    idx_to_team = {}
-    for i, team in enumerate(sorted(list(all_team))):
-        team_to_idx[team] = i
-        idx_to_team[i] = team
-    return team_to_idx, idx_to_team
-    
-
-def build_match_edges(match_data: list, team_to_idx: dict) -> list[tuple[int, int]]:
-    team_edges = []
-    for one_match in match_data:
-        team1_name = one_match.get("team1")
-        team2_name = one_match.get("team2")
-        team1_id = team_to_idx.get(team1_name)
-        team2_id = team_to_idx.get(team2_name)
-
-        if one_match.get("score1") > one_match.get("score2"):            
-            team_edges.append((team1_id, team2_id))
-        else:
-            team_edges.append((team2_id, team1_id))
-    return team_edges
 
 
 def build_network(
