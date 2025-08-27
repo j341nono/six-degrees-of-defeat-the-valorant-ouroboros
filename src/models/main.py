@@ -25,6 +25,7 @@ def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, s
     for one_match in match_data:
         all_team.add(one_match.get("team1"))
         all_team.add(one_match.get("team2"))
+
     team_to_idx = {}
     idx_to_team = {}
     for i, team in enumerate(sorted(list(all_team))):
@@ -33,8 +34,21 @@ def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, s
     return team_to_idx, idx_to_team
 
 
-def network():
+def add_winner(match_data: list) -> None:
+    for one_match in match_data:
+        if one_match.get("score1") > one_match.get("score2"):
+            one_match["winner"] = one_match.get("team1")
+        else:
+            one_match["winner"] = one_match.get("team2")
+            
+
+def network(match_data: list, idx_to_team: dict):
+    for one_match in match_data:
+        one_match.get("winner")
+
+
     G = nx.DiGrapsh()
+
 
 
 
@@ -75,6 +89,11 @@ def debug_make_team_to_idx():
     # print(team_to_idx)
     print(idx_to_team)
 
+def debug_win_func():
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    add_winner(match_data)
+    print(match_data[:2])
+
 
 if __name__ == "__main__":
-    main()
+    debug_win_func()
