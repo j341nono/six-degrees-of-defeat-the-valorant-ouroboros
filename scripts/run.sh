@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run -m src.models.main
+uv run -m src.models.network

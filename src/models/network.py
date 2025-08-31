@@ -1,9 +1,9 @@
 import networkx as nx
 from src.models.utils import (
-    parse_args,
     load_json_line,
     make_team_to_idx_dict,
-    build_match_edges
+    build_match_edges,
+    parse_args
 ) 
 
 SAVE_MATCH_DATA="data/processed/match_data.jsonl"
@@ -13,7 +13,6 @@ def build_network(
         idx_to_team: dict, 
         team_edges: list[tuple[int, int]]
     ) -> None:
-
     team_node = []
     for team_id in range(len(idx_to_team)):
         team_node.append(team_id)
@@ -33,13 +32,27 @@ def find_shortest_path(DG: nx.DiGraph, win_team: str, loss_team: str):
         sys.exit()
 
 
+def is_name_exist(name: str) -> None:
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    try:
+        print(team_to_idx[name])
+    except KeyError:
+        print(f"team name : {name} is not found.")
+
+
 def main():
     args = parse_args()
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
     team_edges = build_match_edges(match_data, team_to_idx)
     DG = build_network(idx_to_team, team_edges)
-    
+
+    win_team_id = 135
+    loss_team_id = 111
+    if args.find_shortest_path:
+        path = find_shortest_path(DG, win_team_id, loss_team_id)
+        print(path)
 
 
 
@@ -90,6 +103,7 @@ def debug_build_graph():
     print(f"list(DG.ad): {list(DG.adj[1])}")
     print(f"DG.degree[1]: {DG.degree[1]}")
 
+
 def debug_find_shortest_path():
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
@@ -112,5 +126,5 @@ def debug_search_team():
 
 
 if __name__ == "__main__":
-    debug_find_shortest_path()
-    # debug_search_team()
+    # debug_find_shortest_path()
+    is_name_exist("aaaaaa")

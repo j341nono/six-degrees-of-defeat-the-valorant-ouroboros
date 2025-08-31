@@ -1,13 +1,12 @@
-import argparse
 import json
+import argparse
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--max", action="store_true")
+    parser.add_argument("--find_shortest_path", action="store_true")
     parser.add_argument("--min", action="store_true")
     return parser.parse_args()
-
 
 def load_json_line(path: str) -> list:
     match_list = []
