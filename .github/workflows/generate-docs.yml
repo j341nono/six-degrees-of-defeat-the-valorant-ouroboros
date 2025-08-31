@@ -2,9 +2,9 @@ name: Generate and Deploy API Documentation
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, dev ]
   # 手動実行も可能にする
   workflow_dispatch:
 
