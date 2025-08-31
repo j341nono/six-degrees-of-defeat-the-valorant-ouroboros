@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Six Degrees of Defeat: Valorant API Documentation</title>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui.css" />
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui.css" />
+    <link rel="icon" type="image/png" href="https://unpkg.com/swagger-ui-dist@5.17.14/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="https://unpkg.com/swagger-ui-dist@5.17.14/favicon-16x16.png" sizes="16x16" />
     <style>
         html {
             box-sizing: border-box;
@@ -46,11 +48,11 @@
     
     <div id="swagger-ui"></div>
     
-    <script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js"></script>
-    <script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-standalone-preset.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-bundle.js" charset="UTF-8"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
     <script>
         window.onload = function() {
-            // SwaggerUIの設定
+            // SwaggerUIの設定 (既存の設定を維持)
             const ui = SwaggerUIBundle({
                 url: "./openapi.json",
                 dom_id: '#swagger-ui',
@@ -73,7 +75,7 @@
                 persistAuthorization: false
             });
             
-            // カスタマイズ: APIサーバーの情報を追加
+            // カスタマイズ: APIサーバーの情報を追加 (既存の処理を維持)
             setTimeout(() => {
                 const infoSection = document.querySelector('.info');
                 if (infoSection) {
