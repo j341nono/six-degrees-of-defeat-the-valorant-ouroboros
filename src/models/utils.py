@@ -16,11 +16,16 @@ def load_json_line(path: str) -> list:
     return match_list
             
 
-def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, str]]:
+def get_set_all_team(match_data: list) -> set:
     all_team = set()
     for one_match in match_data:
         all_team.add(one_match.get("team1"))
         all_team.add(one_match.get("team2"))
+    return all_team    
+
+
+def make_team_to_idx_dict(match_data: list) -> tuple[dict[str, int], dict[int, str]]:
+    all_team = get_set_all_team(match_data)
 
     team_to_idx = {}
     idx_to_team = {}
@@ -43,3 +48,9 @@ def build_match_edges(match_data: list, team_to_idx: dict) -> list[tuple[int, in
         else:
             team_edges.append((team2_id, team1_id))
     return team_edges
+
+
+# def get_all_exist_team(match_data: list):
+#     all_team = get_set_all_team(match_data)
+
+    

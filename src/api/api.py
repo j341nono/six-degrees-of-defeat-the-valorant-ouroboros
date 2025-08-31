@@ -69,6 +69,12 @@ async def _find_shortest_path(from_team: str, to_team: str):
     }
 
 
+@app.get("/teams/exists")
+async def _get_all_exist_team():
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    
+
+
 @app.get("/teams/{team_name}")
 async def _is_team_exist(team_name: str):
     match_data = load_json_line(SAVE_MATCH_DATA)
@@ -79,5 +85,4 @@ async def _is_team_exist(team_name: str):
     return {
         "exist": exist_flg,
     }
-
 
