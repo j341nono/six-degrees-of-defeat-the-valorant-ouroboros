@@ -67,4 +67,15 @@ async def _find_shortest_path(from_team: str, to_team: str):
         "to": to_team,
         "path": [team_name_path_list],
     }
-    
+
+
+@app.get("/teams/exist")
+async def _is_team_exist(team_name: str):
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, _ = make_team_to_idx_dict(match_data)
+    exist_flg = True
+    if is_name_exist(team_name, team_to_idx):
+        exist_flg = False
+    return {
+        "exist": exist_flg,
+    }
