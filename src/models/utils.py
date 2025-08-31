@@ -49,8 +49,4 @@ def build_match_edges(match_data: list, team_to_idx: dict) -> list[tuple[int, in
             team_edges.append((team2_id, team1_id))
     return team_edges
 
-
-# def get_all_exist_team(match_data: list):
-#     all_team = get_set_all_team(match_data)
-
     

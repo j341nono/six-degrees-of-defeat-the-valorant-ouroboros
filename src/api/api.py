@@ -4,6 +4,7 @@ from src.models.utils import (
     load_json_line,
     make_team_to_idx_dict,
     build_match_edges,
+    get_set_all_team,
 )
 from src.models.network import (
     build_network,
@@ -72,7 +73,9 @@ async def _find_shortest_path(from_team: str, to_team: str):
 @app.get("/teams/exists")
 async def _get_all_exist_team():
     match_data = load_json_line(SAVE_MATCH_DATA)
-    
+    all_team_set = get_set_all_team(match_data)
+    all_team_list = list(all_team_set)
+    return {"teams": all_team_list}
 
 
 @app.get("/teams/{team_name}")
