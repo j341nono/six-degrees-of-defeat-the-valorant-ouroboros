@@ -27,15 +27,17 @@ def find_shortest_path(DG: nx.DiGraph, from_team: str, to_team: str):
     try:
         return nx.shortest_path(DG, source=from_team, target=to_team)
     except nx.exception.NetworkXNoPath:
-        print(f"No path between {from_team} to {to_team}")
-        import sys
-        sys.exit()
+        # print(f"No path between {from_team} to {to_team}")
+        # import sys
+        # sys.exit()
+        return -1
 
 
-def is_name_exist(name: str) -> None:
+def is_name_exist(name: str) -> int:
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, _ = make_team_to_idx_dict(match_data)
     try:
+        team_to_idx[name]
         return 0
     except KeyError:
         return -1
@@ -110,11 +112,13 @@ def debug_find_shortest_path():
     team_edges = build_match_edges(match_data, team_to_idx)
     DG = build_network(idx_to_team, team_edges)
 
-    from_team_id = 135
+    from_team_id = 1
     to_team_id = 111
-    print(f"from_team: {idx_to_team.get(from_team_id)}")
-    print(f"to_team: {idx_to_team.get(to_team_id)}")
+    # print(f"from_team: {idx_to_team.get(from_team_id)}")
+    # print(f"to_team: {idx_to_team.get(to_team_id)}")
     path = find_shortest_path(DG, from_team_id, to_team_id)
+    if isinstance(path, int):
+        return -1
     print(path)
 
 
@@ -125,6 +129,31 @@ def debug_search_team():
     print(team_to_idx.get("FNATIC")) # 111
 
 
+def debug_api():
+    from_team = "Fnatic"
+    to_team = "T1"
+
+    print(is_name_exist(from_team))
+    print(is_name_exist(to_team))
+
+    missing_team_list = []
+    if not is_name_exist(from_team):
+        print("missing 1")
+        missing_team_list.append(from_team)
+
+    if not is_name_exist(to_team):
+        print("missing 2")
+        missing_team_list.append(to_team)
+    
+    if len(missing_team_list):
+        # return {
+        #     "error": "Team not found",
+        #     "missing_teams": missing_team_list,
+        # }
+        print("0")
+    # print("1")
+
 if __name__ == "__main__":
     # debug_find_shortest_path()
-    is_name_exist("aaaaaa")
+    # is_name_exist("aaaaaa")
+    debug_api()
