@@ -23,11 +23,11 @@ def build_network(
     return DG
 
 
-def find_shortest_path(DG: nx.DiGraph, win_team: str, loss_team: str):
+def find_shortest_path(DG: nx.DiGraph, from_team: str, to_team: str):
     try:
-        return nx.shortest_path(DG, source=win_team, target=loss_team)
+        return nx.shortest_path(DG, source=from_team, target=to_team)
     except nx.exception.NetworkXNoPath:
-        print(f"No path between {win_team} to {loss_team}")
+        print(f"No path between {from_team} to {to_team}")
         import sys
         sys.exit()
 
@@ -36,9 +36,9 @@ def is_name_exist(name: str) -> None:
     match_data = load_json_line(SAVE_MATCH_DATA)
     team_to_idx, _ = make_team_to_idx_dict(match_data)
     try:
-        print(team_to_idx[name])
+        return 0
     except KeyError:
-        print(f"team name : {name} is not found.")
+        return -1
 
 
 def main():
@@ -48,10 +48,10 @@ def main():
     team_edges = build_match_edges(match_data, team_to_idx)
     DG = build_network(idx_to_team, team_edges)
 
-    win_team_id = 135
-    loss_team_id = 111
+    from_team_id = 135
+    to_team_id = 111
     if args.find_shortest_path:
-        path = find_shortest_path(DG, win_team_id, loss_team_id)
+        path = find_shortest_path(DG, from_team_id, to_team_id)
         print(path)
 
 
@@ -110,11 +110,11 @@ def debug_find_shortest_path():
     team_edges = build_match_edges(match_data, team_to_idx)
     DG = build_network(idx_to_team, team_edges)
 
-    win_team_id = 135
-    loss_team_id = 111
-    print(f"win_team: {idx_to_team.get(win_team_id)}")
-    print(f"loss_team: {idx_to_team.get(loss_team_id)}")
-    path = find_shortest_path(DG, win_team_id, loss_team_id)
+    from_team_id = 135
+    to_team_id = 111
+    print(f"from_team: {idx_to_team.get(from_team_id)}")
+    print(f"to_team: {idx_to_team.get(to_team_id)}")
+    path = find_shortest_path(DG, from_team_id, to_team_id)
     print(path)
 
 
