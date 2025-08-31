@@ -46,7 +46,7 @@ jobs:
         import sys
         sys.path.append('src')
         try:
-            from main import app
+            from src.api.api import app
             print('✅ FastAPIアプリのインポートに成功しました')
             print(f'アプリタイトル: {app.title if hasattr(app, \"title\") else \"未設定\"}')
         except ImportError as e:
