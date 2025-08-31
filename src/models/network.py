@@ -33,9 +33,9 @@ def find_shortest_path(DG: nx.DiGraph, from_team: str, to_team: str):
         return -1
 
 
-def is_name_exist(name: str) -> int:
-    match_data = load_json_line(SAVE_MATCH_DATA)
-    team_to_idx, _ = make_team_to_idx_dict(match_data)
+def is_name_exist(name: str, team_to_idx: list) -> int:
+    # match_data = load_json_line(SAVE_MATCH_DATA)
+    # team_to_idx, _ = make_team_to_idx_dict(match_data)
     try:
         team_to_idx[name]
         return 0
@@ -133,15 +133,20 @@ def debug_api():
     from_team = "Fnatic"
     to_team = "T1"
 
-    print(is_name_exist(from_team))
-    print(is_name_exist(to_team))
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+
+    print(is_name_exist(from_team, idx_to_team))
+    print(type(is_name_exist(from_team, idx_to_team)))
+    print(is_name_exist(to_team, idx_to_team))
+    print(type(is_name_exist(to_team, idx_to_team)))
 
     missing_team_list = []
-    if not is_name_exist(from_team):
+    if is_name_exist(from_team, idx_to_team):
         print("missing 1")
         missing_team_list.append(from_team)
 
-    if not is_name_exist(to_team):
+    if is_name_exist(to_team, idx_to_team):
         print("missing 2")
         missing_team_list.append(to_team)
     
@@ -153,7 +158,57 @@ def debug_api():
         print("0")
     # print("1")
 
+def debug_api_internal_error():
+    from_team = "T1"
+    to_team = "DRX"
+
+    match_data = load_json_line(SAVE_MATCH_DATA)
+    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+
+    missing_team_list = []
+    if is_name_exist(from_team, team_to_idx):
+        print("missing 1")
+        missing_team_list.append(from_team)
+
+    if is_name_exist(to_team, team_to_idx):
+        print("missing 2")
+        missing_team_list.append(to_team)
+    
+    if len(missing_team_list):
+        print( {
+            "error": "Team not found",
+            "missing_teams": missing_team_list,
+        } )
+        import sys; sys.exit()
+
+    team_edges = build_match_edges(match_data, team_to_idx)
+    DG = build_network(idx_to_team, team_edges)
+
+    from_team_idx = team_to_idx.get(from_team)
+    to_team_idx = team_to_idx.get(to_team)
+
+    team_idx_path_list = find_shortest_path(DG=DG, from_team=from_team_idx, to_team=to_team_idx)
+    print(team_idx_path_list)
+    if isinstance(team_idx_path_list, int):
+        print( {
+            "from": from_team,
+            "to": to_team,
+            "message": "No path found",
+        } )
+        import sys; sys.exit()
+    
+    team_name_path_list = []
+    for idx_team in team_idx_path_list:
+        team_name_path_list.append(idx_to_team.get(idx_team))
+    
+    print( {
+        "from": from_team,
+        "to": to_team,
+        "path": [team_name_path_list],
+    } )
+
+
 if __name__ == "__main__":
     # debug_find_shortest_path()
     # is_name_exist("aaaaaa")
-    debug_api()
+    debug_api_internal_error()
