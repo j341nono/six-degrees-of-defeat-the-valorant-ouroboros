@@ -34,7 +34,7 @@ def find_shortest_path(DG: nx.DiGraph, win_team: str, loss_team: str):
 
 def is_name_exist(name: str) -> None:
     match_data = load_json_line(SAVE_MATCH_DATA)
-    team_to_idx, idx_to_team = make_team_to_idx_dict(match_data)
+    team_to_idx, _ = make_team_to_idx_dict(match_data)
     try:
         print(team_to_idx[name])
     except KeyError:
