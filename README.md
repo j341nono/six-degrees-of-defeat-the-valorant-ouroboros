@@ -22,18 +22,18 @@ The results are provided via a REST API built with FastAPI.
 
 1. リポジトリをクローン
 ```bash
-git clone <repository-url>
-cd six-degrees-of-defeat
+git clone git@github.com:j341nono/six-degrees-of-defeat-the-valorant-ouroboros.git
+cd six-degrees-of-defeat-the-valorant-ouroboros
 ```
 
 2. 試合データをダウンロード
 ```bash
-./data_processor.sh
+./scripts/data_processor.sh
 ```
 
 3. APIを起動
 ```bash
-./run_api.sh
+./scripts/run_api.sh
 ```
 
 APIサーバーは `http://127.0.0.1:8000` で起動します。
